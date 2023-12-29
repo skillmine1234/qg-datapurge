@@ -1,0 +1,57 @@
+
+<br/>
+<h1>Data Purge Analytics</h1>
+<br/>
+<table class="table table-bordered table-striped table-hover" style="table-layout: fixed; width: 100%;">
+  <div class="thead">
+    <th style="text-align:left; background-color: lightblue;">
+      INSERTION
+    </th>
+    <th style="text-align:left; background-color: lightblue;">
+      DELETION
+    </th>
+    <th style="text-align:left; background-color: lightblue;">
+      RUN BY
+    </th>
+    <th style="text-align:left; background-color: lightblue;">
+      RUN AT     
+    </th>
+    <th style="text-align:left; background-color: lightblue;">
+      TABLE NAME    
+    </th>
+    <th style="text-align:left; background-color: lightblue;">
+      FAULT REASON      
+    </th>
+    <th style="text-align:left; background-color: lightblue;">
+      STATUS     
+    </th>
+  </div>
+
+  <div class="tbody">
+    <% @prg_audit.each do |purge_data| %>
+      <tr>
+        <td style="text-align:left;">
+          <%= purge_data.try(:insertion)   %>
+        </td>
+        <td style="text-align:left;">
+          <%= purge_data.try(:deletion) %>
+        </td>
+        <td style="text-align:left;">
+          <%= purge_data.try(:run_by) %>
+        </td>
+        <td style="text-align:left;">
+          <%= purge_data.try(:run_at) %>
+        </td>
+        <td style="text-align:left;">
+          <%= purge_data.try(:table_name) %>
+        </td>
+        <td style="text-align:left;">
+          <%= purge_data.try(:fault_reason) %>
+        </td>
+        <td style="text-align:left;">
+          <%= purge_data.try(:status) %>
+        </td>
+      </tr>
+    <% end %>
+  </div>
+</table>

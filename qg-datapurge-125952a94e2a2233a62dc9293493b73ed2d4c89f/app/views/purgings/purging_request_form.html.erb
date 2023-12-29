@@ -1,0 +1,100 @@
+<script>
+
+  $(document).ajaxSend(function(r, s) {
+    $("#spinner_area").show();
+  });
+
+  $(document).ajaxStop(function(r, s) {
+    $("#spinner_area").hide();
+  });
+
+  $(document).ready(function(){
+    $('#one_day').prop('disabled',true);
+    $('#two_day').prop('disabled',true);
+    $('#three_day').prop('disabled',true);
+  	$("#table_name").on("change", function () {
+      if ($('#table_name').val() == 'NS_PENDING_NOTIFICATION'){
+        $('#from_date').prop('disabled',true);
+        $('#from_date').val('');
+        $('#one_day').prop('disabled',false);
+        $('#two_day').prop('disabled',false);
+        $('#three_day').prop('disabled',false);
+      }
+      if ($('#table_name').val() != 'NS_PENDING_NOTIFICATION'){
+        $('#from_date').prop('disabled',false);
+        $('#one_day').prop('disabled',true);
+        $('#two_day').prop('disabled',true);
+        $('#three_day').prop('disabled',true);
+
+      }
+    })
+    $("#generate_report_btn").on('click', function(e){
+      $("#msg-error").text("")
+      e.preventDefault
+      var from_date = $("#from_date").val();
+      var to_date = $("#to_date").val();
+      var table_name = $("#table_name").val();
+      if (table_name != "NS_PENDING_NOTIFICATION")
+       { 
+          if (from_date == "" || from_date == undefined || table_name == "" || table_name == undefined){
+            $("#msg-error").text("Please select table name")
+            return false
+          }
+          else if(from_date != ""){
+            
+            var start_date = new Date(from_date)
+            var today = new Date()
+
+            diff = (today - start_date)/1000/60/60/24
+
+            if (start_date > today){
+              $("#msg-error").text("Please don't select future date.");
+              return false;
+            }
+
+            if (diff < 90){
+              $("#msg-error").text("Date must be 90 days back.");
+              return false;
+            }
+          }
+      }    
+    });
+  })
+
+</script>
+
+
+<div id="spinner_area" style="float-left:100px;margin-left:550px;height:100px;width:100px;margin-top:10px;display:none;">
+  <%= image_tag "spinner_gif.gif",size: "80x80" %>
+  please wait....
+</div>
+
+<br/>
+<h1>Data Purge Request</h1>
+<br/>
+
+<%= form_tag(purging_request_purgings_path, :method=>"get",:remote=>true ,:class=>'form-horizontal') do %>
+  <div class="control-group">
+    <%= label_tag 'Table Name' %>
+    <%= select_tag :table_name, options_for_select([['FUNDS_TRANSFERS', 'FUNDS_TRANSFERS'],['INWARD_REMITTANCES', 'INWARD_REMITTANCES'],['ECOL_TRANSACTIONS', 'ECOL_TRANSACTIONS'],['NS_PENDING_NOTIFICATION','NS_PENDING_NOTIFICATION']]), :prompt => 'Select table' %>
+  </div>
+  <div class="control-group">
+    <%= label_tag 'From Date' %>
+    <%= text_field_tag "from_date" %>
+  </div>
+  <div class="control-group">
+    One Day Before  <input class="control-group" type="radio" value="1" checked="checked" name="deletion_period[return]" id="one_day"><br/>
+
+    Two Day Before <input class="control-group" type="radio" value="2" checked="checked" name="deletion_period[return]" id="two_day"><br/>
+
+    Three Day Before <input class="control-group" type="radio" value="3" checked="checked" name="deletion_period[return]" id="three_day">
+    <div class="form-actions"><br/>
+  </div>
+
+    <%= submit_tag "PURGE DATA",:class=>"btn btn-primary", :id => "generate_report_btn", data:{disable_with: "Please wait..."} %>
+    <br/>
+    <br/>
+    <div id="msg-error"></div>
+  </div>
+<% end %>
+<div id="data_area" style="dispaly:none;"></div>

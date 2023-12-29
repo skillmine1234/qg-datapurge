@@ -1,0 +1,52 @@
+
+<br/>
+<h1>Data Purge Request</h1>
+<br/>
+
+<%= "Total Count: #{@purge_request.count}" %>
+<%= will_paginate @purge_request, :page_links => true %>
+<br/>
+<table class="table table-bordered table-striped table-hover" style="table-layout: fixed; width: 100%;">
+  <div class="thead">
+    <th style="text-align:left; background-color: lightblue;"></th>
+    <th style="text-align:left; background-color: lightblue;">
+      TABLE NAME
+    </th>
+    <th style="text-align:left; background-color: lightblue;">
+      To Date
+    </th>
+    <th style="text-align:left; background-color: lightblue;">
+      Created By 			
+    </th>
+    <th style="text-align:left; background-color: lightblue;">
+      Updated By      
+    </th>
+    <th style="text-align:left; background-color: lightblue;">
+      Created At      
+    </th>
+  </div>
+  <div class="tbody">
+    <% @purge_request.each do |purge_request| %>
+      <tr>
+        <td style="text-align:left;">
+          <%= link_to 'Show', pgr_request_path(purge_request)%>
+        </td>
+        <td style="text-align:left;">
+          <%= purge_request.try(:table_name)   %>
+        </td>
+        <td style="text-align:left;">
+          <%= purge_request.try(:to_date) %>
+        </td>
+        <td style="text-align:left;">
+          <%= purge_request.created_user.try(:username) %>
+        </td>
+        <td style="text-align:left;">
+          <%= purge_request.updated_user.try(:username) %>
+        </td>
+        <td style="text-align:left;">
+          <%= purge_request.created_at.strftime("%d/%m/%Y") %>
+        </td>
+      </tr>
+    <% end %>
+  </div>
+</table>
